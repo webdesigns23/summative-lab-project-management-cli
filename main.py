@@ -9,6 +9,13 @@ users = {}
 def add_user(args):
 	pass
 
+# def add_user(self,name, email):
+	# 	new_user = {
+	# 		"name": name,
+	# 		"email": email
+	# 	}
+	# 	self.user.append(new_user)
+
 def add_project(args):
       pass
 
