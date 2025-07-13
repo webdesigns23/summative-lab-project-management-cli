@@ -3,31 +3,59 @@ from models.user import User
 from models.task import Task
 from models.project import Project
 
-# Global dictionary to store users and their tasks
+# Global dictionary to store users, projects, and tasks
 users = {}
+projects = {}
+tasks = {}
 
 def add_user(args):
-	pass
-
-# def add_user(self,name, email):
-	# 	new_user = {
-	# 		"name": name,
-	# 		"email": email
-	# 	}
-	# 	self.user.append(new_user)
+    if args.name in users:
+        print(f"User, '{args.name}' already exists.")
+        return
+    user = User(args.name, args.email)
+    users[args.name] = user
+    print(f"User added: {user}")
 
 def add_project(args):
-      pass
+    user = users.get(args.user) or User(args.user)
+    if not user:
+        print(f"User '{args.user}' not found.")
+
+    project = Project(args.title, args.description, args.due_date)
+    user.add_project(project)  
+    projects[args.title] = project
+    print(f"Project added: {project}")
 
 def add_task(args):
-	pass      
+    project = projects.get(args.project)
+    if not project:
+        print(f"Project '{args.project}' not found.")
+        return
+    
+    task = Task(args.title, args.status, args.assigned_to)
+    project.add_task(task)     
+    task[args.title] = task
+    print(f"Task added to project- {args.project} : {task}")
 
 def list_projects(args):
-    pass
+    user = users.get(args.user)
+    if not user:
+        print(f"User '{args.user}' not found.")
+    if not user.projects:
+        print(f"No projects for user '{args.user}'.")
+        return
+
+    print(f"Projects for {args.user}:")
+    for proj in user.projects:
+        print(f"{proj.title} is due {proj.due_date}")
 
 def complete_task(args):
-	pass
-    
+    task = task.get(args.title)
+    if not task:
+        print(f"Task '{args.title}' not found.")
+        return
+    task.complete()
+    print(f"Task '{args.task}' is complete!")
 
 # CLI entry point
 def main():
