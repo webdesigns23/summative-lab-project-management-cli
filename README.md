@@ -20,4 +20,4 @@ Fork and Clone:
 Open and Run the Project:
 - Open in VSCode or your preferred IDE
 - Run the CLI tool using:
-- python cli_tool.py [command]
+- pyrhon3 main.py [command]
