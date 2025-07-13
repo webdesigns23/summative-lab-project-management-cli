@@ -1,4 +1,4 @@
-from project import Project
+from models.project import Project
 
 class Person:
 	def __init__(self, name, email):

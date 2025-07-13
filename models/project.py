@@ -1,4 +1,4 @@
-from task import Task
+from models.task import Task
 from datetime import datetime
 
 class Project:

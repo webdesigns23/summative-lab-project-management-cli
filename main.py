@@ -2,8 +2,16 @@ import argparse
 from models.user import User
 from models.task import Task
 from models.project import Project
+from utils.file_io import load_data, save_data
+from rich import print
+from rich.console import Console
 
-# Global dictionary to store users, projects, and tasks
+console = Console()
+
+USER_FILE = "data/users.json"
+PROJECT_FILE = "data/project.json"
+TASK_FILE = "data/task.json"
+
 users = {}
 projects = {}
 tasks = {}
@@ -15,6 +23,7 @@ def add_user(args):
     user = User(args.name, args.email)
     users[args.name] = user
     print(f"User added: {user}")
+    save_data(USER_FILE)
 
 def add_project(args):
     user = users.get(args.user) or User(args.user)
@@ -25,6 +34,7 @@ def add_project(args):
     user.add_project(project)  
     projects[args.title] = project
     print(f"Project added: {project}")
+    save_data(PROJECT_FILE)
 
 def add_task(args):
     project = projects.get(args.project)
@@ -34,28 +44,33 @@ def add_task(args):
     
     task = Task(args.title, args.status, args.assigned_to)
     project.add_task(task)     
-    task[args.title] = task
+    tasks[args.title] = task
     print(f"Task added to project- {args.project} : {task}")
+    save_data(TASK_FILE)
 
+#ADDED RICH from PyPi
 def list_projects(args):
     user = users.get(args.user)
     if not user:
-        print(f"User '{args.user}' not found.")
+        console.print(f"[red]User '{args.user}' not found.[/red]")
+        return
     if not user.projects:
-        print(f"No projects for user '{args.user}'.")
+        console.print(f"[yellow]No projects for user '{args.user}'.[/yellow]")
         return
 
     print(f"Projects for {args.user}:")
     for proj in user.projects:
         print(f"{proj.title} is due {proj.due_date}")
+    load_data(PROJECT_FILE)
 
 def complete_task(args):
     task = task.get(args.title)
     if not task:
         print(f"Task '{args.title}' not found.")
         return
-    task.complete()
+    task.status = "completed"
     print(f"Task '{args.task}' is complete!")
+    load_data(TASK_FILE, tasks)
 
 # CLI entry point
 def main():
@@ -72,16 +87,16 @@ def main():
     add_parser = subparsers.add_parser("add-project", help="Add a new project")
     add_parser.add_argument("user")
     add_parser.add_argument("title")
-    add_parser.add_argument("status")
-    add_parser.add_argument("assigned-to")
+    add_parser.add_argument("description")
+    add_parser.add_argument("due_date")
     add_parser.set_defaults(func=add_project)
     
 	# Subparser for add task
     add_parser = subparsers.add_parser("add-task", help="Add a new task")
     add_parser.add_argument("project")
     add_parser.add_argument("title")
-    add_parser.add_argument("description")
-    add_parser.add_argument("due-date")
+    add_parser.add_argument("status")
+    add_parser.add_argument("assigned_to")
     add_parser.set_defaults(func=add_task)  
     
 	# Subparser for listing projects
