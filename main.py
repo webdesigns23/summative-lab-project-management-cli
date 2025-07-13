@@ -23,7 +23,7 @@ def add_user(args):
     user = User(args.name, args.email)
     users[args.name] = user
     print(f"User added: {user}")
-    save_data(USER_FILE)
+    save_data(USER_FILE, users)
 
 def add_project(args):
     user = users.get(args.user) or User(args.user)
@@ -34,7 +34,7 @@ def add_project(args):
     user.add_project(project)  
     projects[args.title] = project
     print(f"Project added: {project}")
-    save_data(PROJECT_FILE)
+    save_data(PROJECT_FILE, projects)
 
 def add_task(args):
     project = projects.get(args.project)
@@ -46,7 +46,7 @@ def add_task(args):
     project.add_task(task)     
     tasks[args.title] = task
     print(f"Task added to project- {args.project} : {task}")
-    save_data(TASK_FILE)
+    save_data(TASK_FILE, tasks)
 
 #ADDED RICH from PyPi
 def list_projects(args):
@@ -61,7 +61,7 @@ def list_projects(args):
     print(f"Projects for {args.user}:")
     for proj in user.projects:
         print(f"{proj.title} is due {proj.due_date}")
-    load_data(PROJECT_FILE)
+    load_data(PROJECT_FILE, projects)
 
 def complete_task(args):
     task = task.get(args.title)
